@@ -84,6 +84,26 @@ async function run() {
             const products = await cursor.toArray();
             res.json(products);
         });
+        //API for single company data load
+        app.get('/carlist/:make/:model', async (req, res) => {
+            const make = req.params.make;
+            const model = req.params.model;
+            const query = { Make: make, Model: model };
+
+            const cursor = await CarListCollection.find(query);
+            const list = await cursor.toArray();
+            res.json(list);
+        });
+
+        //API for submit data from admin
+        app.post('/uploaddata', async (req, res) => {
+            const list = req.body;
+
+            const result = await CarListCollection.insertOne(list)
+            console.log('hiot', list)
+            res.json(result)
+        });
+
 
         console.log('db connected');
     } finally {
