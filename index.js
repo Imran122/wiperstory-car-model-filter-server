@@ -22,7 +22,7 @@ async function run() {
     try {
         await client.connect();
         const database = client.db('wiperStory');
-        const projectCollection = database.collection('carListDb');
+        const CarListCollection = database.collection('carListDb');
         const usersCollection = database.collection('users')
 
 
@@ -54,9 +54,36 @@ async function run() {
             if (user?.role === 'admin') {
                 isAdmin = true;
             }
-            console.log(isAdmin);
+
             res.json({ admin: isAdmin });
         })
+
+
+        //api foro load car list db data
+        app.get('/carlist', async (req, res) => {
+
+            const cursor = CarListCollection.find({});
+            const allCar = await cursor.toArray();
+            res.send(allCar)
+        });
+        app.get('/filtercarlist', async (req, res) => {
+
+            const cursor = CarListCollection.find({});
+
+            const allCar = await cursor.toArray();
+            res.send(allCar)
+        });
+
+        //API for single company data load
+        app.get('/carlist/:make', async (req, res) => {
+            const make = req.params.make;
+
+            const query = { Make: make };
+
+            const cursor = await CarListCollection.find(query);
+            const products = await cursor.toArray();
+            res.json(products);
+        });
 
         console.log('db connected');
     } finally {
