@@ -22,7 +22,8 @@ async function run() {
     try {
         await client.connect();
         const database = client.db('wiperStory');
-        const CarListCollection = database.collection('carListDb');
+        //const CarListCollection = database.collection('carListDb');
+        const CarListCollection = database.collection('demolist');
         const usersCollection = database.collection('users')
 
 
@@ -78,7 +79,7 @@ async function run() {
         app.get('/carlist/:make', async (req, res) => {
             const make = req.params.make;
 
-            const query = { Make: make };
+            const query = { Slugmake: make };
 
             const cursor = await CarListCollection.find(query);
             const products = await cursor.toArray();
@@ -88,9 +89,9 @@ async function run() {
         app.get('/carlist/:make/:model', async (req, res) => {
             const make = req.params.make;
             const model = req.params.model;
-            const query = { Make: make, Model: model };
+            const query = { Slugmake: make, Slugmodel: model };
 
-            const cursor = await CarListCollection.find(query);
+            const cursor = CarListCollection.find(query);
             const list = await cursor.toArray();
             res.json(list);
         });
